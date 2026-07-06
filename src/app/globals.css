@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --color-senate-50: #fdf8f3;
+  --color-senate-100: #f9ede0;
+  --color-senate-200: #f2d9bd;
+  --color-senate-300: #e8bf94;
+  --color-senate-400: #d99d66;
+  --color-senate-500: #c97d42;
+  --color-senate-600: #b86335;
+  --color-senate-700: #994d2e;
+  --color-senate-800: #7c3f2a;
+  --color-senate-900: #653526;
+  --color-senate-950: #3a1a12;
+
+  --color-parliament-50: #f5f3ff;
+  --color-parliament-100: #ede9fe;
+  --color-parliament-200: #ddd6fe;
+  --color-parliament-300: #c4b5fd;
+  --color-parliament-400: #a78bfa;
+  --color-parliament-500: #8b5cf6;
+  --color-parliament-600: #7c3aed;
+  --color-parliament-700: #6d28d9;
+  --color-parliament-800: #5b21b6;
+  --color-parliament-900: #4c1d95;
+  --color-parliament-950: #2e1065;
+
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: linear-gradient(135deg, #f8f6f3 0%, #ede8e1 50%, #e8e4dc 100%);
+  min-height: 100vh;
+  color: #1a1a2e;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.live-pulse {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.card-shadow {
+  box-shadow: 0 4px 24px rgba(58, 26, 18, 0.08), 0 1px 3px rgba(58, 26, 18, 0.06);
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(58, 26, 18, 0.12), 0 2px 6px rgba(58, 26, 18, 0.08);
+}
+
+.gradient-header {
+  background: linear-gradient(135deg, #3a1a12 0%, #653526 40%, #7c3f2a 100%);
+}
+
+.live-bar {
+  background: linear-gradient(90deg, #7c3aed 0%, #5b21b6 50%, #4c1d95 100%);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1ede8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c97d42;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #994d2e;
+}

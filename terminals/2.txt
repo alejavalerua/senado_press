@@ -1,0 +1,90 @@
+---
+pid: 13720
+cwd: "C:\Users\ALEJANDRA\Downloads\senado_press"
+command: "cd C:\\Users\\ALEJANDRA\\Downloads\\senado_press; npm run build"
+started_at: 2026-07-06T06:46:02.390Z
+running_for_ms: 47975005 
+---
+
+> senado-press@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.20
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 2.1s
+
+./node_modules/jose/dist/webapi/lib/deflate.js
+A Node.js API is used (CompressionStream at line: 10) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/jose/dist/webapi/lib/deflate.js
+./node_modules/jose/dist/webapi/jwe/flattened/encrypt.js
+./node_modules/jose/dist/webapi/index.js
+
+./node_modules/jose/dist/webapi/lib/deflate.js
+A Node.js API is used (DecompressionStream at line: 26) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/jose/dist/webapi/lib/deflate.js
+./node_modules/jose/dist/webapi/jwe/flattened/encrypt.js
+./node_modules/jose/dist/webapi/index.js
+
+ ✓ Compiled successfully in 12.4s
+   Linting and checking validity of types ...
+
+./src/app/api/posts/[id]/moderate/route.ts
+4:10  Warning: 'PostStatus' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/application/use-cases/LoginUseCase.ts
+35:27  Warning: '_' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/presentation/components/AdminPanel.tsx
+230:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/presentation/components/ComposeBox.tsx
+144:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/presentation/components/PostCard.tsx
+68:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/16) ...
+   Generating static pages (4/16) 
+   Generating static pages (8/16) 
+   Generating static pages (12/16) 
+ ✓ Generating static pages (16/16)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ƒ /                                      152 B         103 kB
+├ ○ /_not-found                            995 B         103 kB
+├ ƒ /admin                                4.9 kB         107 kB
+├ ƒ /api/auth/login                        152 B         103 kB
+├ ƒ /api/auth/logout                       152 B         103 kB
+├ ƒ /api/auth/me                           152 B         103 kB
+├ ƒ /api/journalists                       152 B         103 kB
+├ ƒ /api/posts                             152 B         103 kB
+├ ƒ /api/posts/[id]/moderate               152 B         103 kB
+├ ƒ /api/posts/[id]/react                  152 B         103 kB
+├ ƒ /api/posts/pending                     152 B         103 kB
+├ ƒ /api/senate-state                      152 B         103 kB
+├ ƒ /api/senators                          152 B         103 kB
+├ ƒ /api/upload                            152 B         103 kB
+├ ƒ /feed                                7.08 kB         110 kB
+└ ƒ /login                               2.65 kB         105 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/255-3981a3d1f3561bd8.js       46.2 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)          1.99 kB
+
+
+ƒ Middleware                               40 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

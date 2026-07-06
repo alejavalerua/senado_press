@@ -1,0 +1,50 @@
+---
+pid: 30964
+cwd: "C:\Users\ALEJANDRA\Downloads\senado_press"
+command: "cd C:\\Users\\ALEJANDRA\\Downloads\\senado_press; npm run build"
+started_at: 2026-07-06T19:01:31.137Z
+running_for_ms: 3839993  
+---
+
+> senado-press@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.20
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 1529ms
+
+./node_modules/jose/dist/webapi/lib/deflate.js
+A Node.js API is used (CompressionStream at line: 10) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/jose/dist/webapi/lib/deflate.js
+./node_modules/jose/dist/webapi/jwe/flattened/decrypt.js
+./node_modules/jose/dist/webapi/index.js
+
+./node_modules/jose/dist/webapi/lib/deflate.js
+A Node.js API is used (DecompressionStream at line: 26) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/jose/dist/webapi/lib/deflate.js
+./node_modules/jose/dist/webapi/jwe/flattened/decrypt.js
+./node_modules/jose/dist/webapi/index.js
+
+ ✓ Compiled successfully in 10.6s
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/infrastructure/supabase/SupabasePostRepository.ts:87:26
+Type error: Property 'eq' does not exist on type 'PostgrestQueryBuilder<any, any, any, "posts", unknown>'.
+
+  85 |     if (error) {
+  86 |       const posts = await this.fetchWithFallback((sb) =>
+> 87 |         sb.from("posts").eq("status", "approved").is("parent_post_id", null).order("created_at", { ascending: false }).limit(50)
+     |                          ^
+  88 |       );
+  89 |       return this.attachReplies(posts);
+  90 |     }
+Next.js build worker exited with code: 1 and signal: null

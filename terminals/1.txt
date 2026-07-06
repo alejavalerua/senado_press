@@ -1,0 +1,19 @@
+---
+pid: 15780
+cwd: "C:\Users\ALEJANDRA\Downloads\senado_press"
+command: "cd C:\\Users\\ALEJANDRA\\Downloads\\senado_press; npm install"
+started_at: 2026-07-06T06:41:37.981Z
+running_for_ms: 48240005 
+---
+
+added 347 packages, and audited 348 packages in 1m
+
+143 packages are looking for funding
+  run `npm fund` for details
+
+2 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.

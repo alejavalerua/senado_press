@@ -1,0 +1,30 @@
+---
+pid: 11828
+cwd: "C:\Users\ALEJANDRA\Downloads\senado_press"
+command: "cd C:\\Users\\ALEJANDRA\\Downloads\\senado_press; npm run build"
+started_at: 2026-07-06T19:04:01.854Z
+running_for_ms: 3689999  
+---
+
+> senado-press@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.20
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.5s
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/infrastructure/supabase/SupabasePostRepository.ts:86:26
+Type error: Property 'eq' does not exist on type 'PostgrestQueryBuilder<any, any, any, "posts", unknown>'.
+
+  84 |     if (error) {
+  85 |       const posts = await this.fetchWithFallback((sb) =>
+> 86 |         sb.from("posts").eq("status", "approved").is("parent_post_id", null).order("created_at", { ascending: false }).limit(50)
+     |                          ^
+  87 |       );
+  88 |       return this.attachReplies(posts);
+  89 |     }
+Next.js build worker exited with code: 1 and signal: null
