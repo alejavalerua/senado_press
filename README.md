@@ -49,10 +49,10 @@ npm install
 ### 3. Variables de entorno
 
 ```bash
-cp .env.example .env.local
+cp .env .env
 ```
 
-Edita `.env.local`:
+Edita `.env`:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
@@ -107,7 +107,7 @@ Para subir a GitHub de forma organizada:
 
 ```bash
 # Commit 1: Scaffold y configuración
-git add package.json tsconfig.json next.config.ts .gitignore .env.example
+git add package.json tsconfig.json next.config.ts .gitignore .env
 git commit -m "chore: inicializar proyecto Next.js con TypeScript y Tailwind"
 
 # Commit 2: Arquitectura y dominio

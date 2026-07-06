@@ -2,7 +2,7 @@
  * Script de seed para crear usuarios y senadores iniciales.
  * Ejecutar: npx tsx scripts/seed.ts
  *
- * Requiere variables de entorno en .env.local
+ * Requiere variables de entorno en .env
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -10,13 +10,13 @@ import bcrypt from "bcryptjs";
 import * as dotenv from "dotenv";
 import { resolve } from "path";
 
-dotenv.config({ path: resolve(process.cwd(), ".env.local") });
+dotenv.config({ path: resolve(process.cwd(), ".env") });
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 if (!url || !key) {
-  console.error("❌ Configura NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en .env.local");
+  console.error("❌ Configura NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en .env");
   process.exit(1);
 }
 
