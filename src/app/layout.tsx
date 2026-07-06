@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Senado Press — Sala de Prensa BIMUN 2026",
+  title: "Senado Press",
   description: "Red social de periodistas del Modelo de Senado BIMUN 2026",
 };
 

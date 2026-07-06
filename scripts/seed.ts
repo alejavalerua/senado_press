@@ -10,7 +10,10 @@ import bcrypt from "bcryptjs";
 import * as dotenv from "dotenv";
 import { resolve } from "path";
 
-dotenv.config({ path: resolve(process.cwd(), ".env") });
+import { existsSync } from "fs";
+const envLocal = resolve(process.cwd(), ".env.local");
+const envFile = resolve(process.cwd(), ".env");
+dotenv.config({ path: existsSync(envLocal) ? envLocal : envFile });
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -26,9 +29,18 @@ const USERS = [
   {
     username: "samuel",
     display_name: "Samuel Lugo",
+    email: "samuel.lugo@senado.bimun",
     password: "secretario2026",
     role: "admin" as const,
     media_outlet: "Secretaría General del Senado",
+  },
+  {
+    username: "alejandra",
+    display_name: "Alejandra Valencia",
+    email: "alejandra.valencia@senado.bimun",
+    password: "admin2026",
+    role: "admin" as const,
+    media_outlet: "Administración — Senado Press",
   },
   {
     username: "periodista1",
@@ -103,6 +115,7 @@ async function seed() {
       {
         username: user.username,
         display_name: user.display_name,
+        email: "email" in user ? user.email : null,
         password_hash: hash,
         role: user.role,
         media_outlet: user.media_outlet,
@@ -146,7 +159,8 @@ async function seed() {
 
   console.log("\n🎉 Seed completado!");
   console.log("\n📋 Credenciales:");
-  console.log("   Admin:     samuel / secretario2026");
+  console.log("   Admin 1:   samuel / secretario2026");
+  console.log("   Admin 2:   alejandra / admin2026");
   console.log("   Periodistas: periodista1-5 / prensa2026");
 }
 
