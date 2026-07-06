@@ -33,12 +33,12 @@ export function Header({ user }: HeaderProps) {
         <div className="hidden md:flex items-center gap-6 text-sm text-senate-200">
           <div className="text-center">
             <p className="text-senate-300 text-xs uppercase tracking-wider">Presidente</p>
-            <p className="font-medium text-white">Sophia</p>
+            <p className="font-medium text-white">Sophia Hamburguer</p>
           </div>
           <div className="w-px h-8 bg-senate-600" />
           <div className="text-center">
             <p className="text-senate-300 text-xs uppercase tracking-wider">Vicepresidenta</p>
-            <p className="font-medium text-white">Valeria</p>
+            <p className="font-medium text-white">Valeria Gómez</p>
           </div>
           <div className="w-px h-8 bg-senate-600" />
           <div className="text-center">

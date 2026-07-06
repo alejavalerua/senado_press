@@ -107,7 +107,7 @@ export function LoginForm() {
         </div>
 
         <div className="mt-6 text-center text-xs text-gray-400 space-y-1">
-          <p>Presidencia: Sophia · Vicepresidencia: Valeria</p>
+          <p>Presidencia: Sophia Hamburguer · Vicepresidencia: Valeria Gómez</p>
           <p>Secretaría General: Samuel Lugo</p>
           <p className="text-gray-300 mt-3">Desarrollado por Alejandra Valencia</p>
         </div>

@@ -93,8 +93,8 @@ Abre [http://localhost:3000](http://localhost:3000)
 
 ## Mesa Directiva (BIMUN 2026)
 
-- **Presidente:** Sophia
-- **Vicepresidenta:** Valeria
+- **Presidente:** Sophia Hamburguer
+- **Vicepresidenta:** Valeria Gómez
 - **Secretario General:** Samuel Lugo
 
 ## Créditos
