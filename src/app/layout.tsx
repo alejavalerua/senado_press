@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Senado Press",
   description: "Red social de periodistas del Modelo de Senado BIMUN 2026",
+  icons: {
+    icon: "/images/icono.png",
+    apple: "/images/icono.png",
+  },
 };
 
 export default function RootLayout({

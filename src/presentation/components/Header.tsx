@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut, Shield, Newspaper } from "lucide-react";
+import Image from "next/image";
+import { LogOut, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SessionPayload } from "@/infrastructure/auth/session";
 
@@ -21,9 +22,14 @@ export function Header({ user }: HeaderProps) {
     <header className="gradient-header text-white">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-senate-400/30 flex items-center justify-center border border-senate-300/40">
-            <Newspaper className="w-5 h-5 text-senate-200" />
-          </div>
+          <Image
+            src="/images/logo-senado.png"
+            alt="Logo del Senado"
+            width={44}
+            height={44}
+            className="rounded-full object-contain bg-white/10 p-1"
+            priority
+          />
           <div>
             <h1 className="font-display text-xl font-bold tracking-tight">Senado Press</h1>
             <p className="text-senate-200 text-xs">Sala de Prensa — BIMUN 2026</p>
