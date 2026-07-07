@@ -54,13 +54,12 @@ export function RegisterForm() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center mb-4">
+          <div className="inline-flex items-center justify-center">
             <Image
               src="/images/logo-senado.png"
               alt="Logo del Senado"
-              width={96}
-              height={96}
-              className="h-20 w-20 md:h-24 md:w-24 object-contain"
+              width={200}
+              height={200}
               priority
             />
           </div>
