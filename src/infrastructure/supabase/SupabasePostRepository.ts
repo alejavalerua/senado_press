@@ -199,4 +199,10 @@ export class SupabasePostRepository implements IPostRepository {
   async block(id: string, moderatedBy: string, note: string): Promise<Post> {
     return this.updateStatus(id, "blocked", moderatedBy, note);
   }
+
+  async delete(id: string): Promise<void> {
+    const supabase = createServiceClient();
+    const { error } = await supabase.from("posts").delete().eq("id", id);
+    if (error) throw new Error(error.message);
+  }
 }

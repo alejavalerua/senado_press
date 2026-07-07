@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Senado Press",
   description: "Red social de periodistas del Modelo de Senado BIMUN 2026",
   icons: {
-    icon: "/images/icono.png",
-    apple: "/images/icono.png",
+    icon: "/images/favicon-app.svg",
+    apple: "/images/favicon-app.svg",
   },
 };
 

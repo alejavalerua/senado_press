@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Newspaper, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
 import { PasswordField } from "./PasswordField";
 
 export function LoginForm() {
@@ -44,8 +45,14 @@ export function LoginForm() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-header mb-4">
-            <Newspaper className="w-8 h-8 text-senate-200" />
+          <div className="inline-flex items-center justify-center">
+            <Image
+              src="/images/logo-senado.png"
+              alt="Logo del Senado"
+              width={200}
+              height={200}
+              priority
+            />
           </div>
           <h1 className="font-display text-3xl font-bold text-senate-900">Senado Press</h1>
           <p className="text-gray-500 mt-2">Sala de Prensa del Modelo de Senado</p>

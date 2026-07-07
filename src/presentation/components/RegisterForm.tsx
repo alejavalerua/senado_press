@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Newspaper, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
 import { PasswordField } from "./PasswordField";
 
 export function RegisterForm() {
@@ -53,8 +54,15 @@ export function RegisterForm() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-header mb-4">
-            <Newspaper className="w-8 h-8 text-senate-200" />
+          <div className="inline-flex items-center justify-center mb-4">
+            <Image
+              src="/images/logo-senado.png"
+              alt="Logo del Senado"
+              width={96}
+              height={96}
+              className="h-20 w-20 md:h-24 md:w-24 object-contain"
+              priority
+            />
           </div>
           <h1 className="font-display text-3xl font-bold text-senate-900">Senado Press</h1>
           <p className="text-gray-500 mt-2">Registro de periodistas</p>

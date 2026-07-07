@@ -1,18 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import {
   Loader2, Check, X, Ban, Save, Radio, RefreshCw, Shield,
-  Users, Gavel, FileText, Plus, Pencil, Trash2,
+  Users, Gavel, FileText, Plus, Pencil, Trash2, ImagePlus, Send,
 } from "lucide-react";
 import { Header } from "./Header";
 import { LiveBar } from "./LiveBar";
 import { Footer } from "./Footer";
 import { SessionPayload } from "@/infrastructure/auth/session";
 import { SenateState } from "@/domain/entities/SenateState";
-import { PostWithAuthor, POST_TAG_LABELS, POST_TAG_COLORS, POST_STATUS_LABELS } from "@/domain/entities/Post";
+import { PostTag, PostWithAuthor, POST_TAG_LABELS, POST_TAG_COLORS, POST_STATUS_LABELS } from "@/domain/entities/Post";
 import { Profile, getJournalistStatus } from "@/domain/entities/Profile";
 import { Senator } from "@/domain/entities/Senator";
+
+const ADMIN_POST_TAGS: PostTag[] = ["observacion", "debate", "pregunta", "critica", "sesion"];
 
 interface AdminPanelProps {
   user: SessionPayload;
@@ -50,6 +53,14 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
   const [showSenatorForm, setShowSenatorForm] = useState(false);
   const [editingSenator, setEditingSenator] = useState<Senator | null>(null);
   const [senatorForm, setSenatorForm] = useState({ fullName: "", party: "", caucus: "" });
+
+  const [adminPostContent, setAdminPostContent] = useState("");
+  const [adminPostTag, setAdminPostTag] = useState<PostTag>("observacion");
+  const [adminImageUrl, setAdminImageUrl] = useState<string | null>(null);
+  const [adminImagePreview, setAdminImagePreview] = useState<string | null>(null);
+  const [adminUploading, setAdminUploading] = useState(false);
+  const [adminPublishing, setAdminPublishing] = useState(false);
+  const adminFileRef = useRef<HTMLInputElement>(null);
 
   const loadPosts = useCallback(async () => {
     setLoading(true);
@@ -116,6 +127,80 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
       body: JSON.stringify({ action, note }),
     });
     if (res.ok) loadPosts();
+  }
+
+  async function deletePost(postId: string) {
+    if (!confirm("¿Eliminar este despacho permanentemente? Si tiene respuestas, también se eliminarán.")) return;
+    const res = await fetch(`/api/admin/posts/${postId}`, { method: "DELETE" });
+    const data = await res.json();
+    if (res.ok) {
+      loadPosts();
+      setMessage("Despacho eliminado");
+    } else {
+      setMessage(data.error ?? "Error al eliminar");
+    }
+  }
+
+  async function handleAdminImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAdminImagePreview(URL.createObjectURL(file));
+    setAdminUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setAdminImageUrl(data.url);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Error al subir imagen");
+      setAdminImagePreview(null);
+      setAdminImageUrl(null);
+    } finally {
+      setAdminUploading(false);
+    }
+  }
+
+  function clearAdminImage() {
+    setAdminImageUrl(null);
+    setAdminImagePreview(null);
+    if (adminFileRef.current) adminFileRef.current.value = "";
+  }
+
+  async function publishAdminPost() {
+    if (adminPostContent.trim().length < 10) {
+      setMessage("El despacho debe tener al menos 10 caracteres");
+      return;
+    }
+
+    setAdminPublishing(true);
+    try {
+      const res = await fetch("/api/admin/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: adminPostContent,
+          tag: adminPostTag,
+          imageUrl: adminImageUrl,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setAdminPostContent("");
+      setAdminPostTag("observacion");
+      clearAdminImage();
+      loadPosts();
+      setMessage(data.message ?? "Despacho oficial publicado");
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Error al publicar");
+    } finally {
+      setAdminPublishing(false);
+    }
   }
 
   function startEditJournalist(j: Profile) {
@@ -203,7 +288,7 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
 
         {message && (
           <p className={`text-sm p-3 rounded-lg ${
-            message.includes("correctamente") || message.includes("actualizado") || message.includes("agregado")
+            message.includes("correctamente") || message.includes("actualizado") || message.includes("agregado") || message.includes("publicado") || message.includes("eliminado")
               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
               : "bg-red-50 text-red-700 border border-red-200"
           }`}>
@@ -231,6 +316,85 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
         {/* DESPACHOS */}
         {tab === "despachos" && (
           <section className="bg-white rounded-2xl card-shadow p-6 space-y-6">
+            <div className="border border-parliament-200 rounded-xl p-4 space-y-4 bg-parliament-50/50">
+              <h3 className="font-semibold text-sm text-parliament-800">
+                Publicar despacho oficial (inicia una cadena)
+              </h3>
+              <p className="text-xs text-gray-500">
+                Como Secretario General puedes abrir un hilo para que los periodistas respondan. Se publica de inmediato, sin moderación.
+              </p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Contenido del despacho</label>
+                <textarea
+                  value={adminPostContent}
+                  onChange={(e) => setAdminPostContent(e.target.value)}
+                  rows={4}
+                  maxLength={2000}
+                  placeholder="Escribe el mensaje que abrirá la conversación..."
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-parliament-400 outline-none text-sm resize-none"
+                />
+                <p className="text-xs text-gray-400 mt-1">{adminPostContent.length}/2000 · mínimo 10 caracteres</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Etiqueta</label>
+                <select
+                  value={adminPostTag}
+                  onChange={(e) => setAdminPostTag(e.target.value as PostTag)}
+                  className="w-full md:w-auto px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none"
+                >
+                  {ADMIN_POST_TAGS.map((t) => (
+                    <option key={t} value={t}>{POST_TAG_LABELS[t]}</option>
+                  ))}
+                </select>
+              </div>
+              {adminImagePreview && (
+                <div className="relative inline-block">
+                  <Image
+                    src={adminImagePreview}
+                    alt="Vista previa"
+                    width={200}
+                    height={120}
+                    className="rounded-lg object-cover max-h-32"
+                    unoptimized
+                  />
+                  <button
+                    type="button"
+                    onClick={clearAdminImage}
+                    className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  ref={adminFileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={handleAdminImageUpload}
+                />
+                <button
+                  type="button"
+                  onClick={() => adminFileRef.current?.click()}
+                  disabled={adminUploading}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  {adminUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
+                  Adjuntar imagen
+                </button>
+                <button
+                  type="button"
+                  onClick={publishAdminPost}
+                  disabled={adminPublishing || adminUploading}
+                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-parliament-700 hover:bg-parliament-800 text-white text-sm font-semibold disabled:opacity-50"
+                >
+                  {adminPublishing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  Publicar despacho
+                </button>
+              </div>
+            </div>
+
             <div className="flex items-center justify-between">
               <h2 className="font-display font-bold text-lg">
                 Todos los despachos ({allPosts.length})
@@ -246,7 +410,7 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
                   Pendientes de moderación ({pendingPosts.length})
                 </h3>
                 {pendingPosts.map((post) => (
-                  <PostAdminCard key={post.id} post={post} onModerate={moderatePost} highlight />
+                  <PostAdminCard key={post.id} post={post} onModerate={moderatePost} onDelete={deletePost} highlight />
                 ))}
               </div>
             )}
@@ -261,7 +425,7 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
                 <p className="text-center text-gray-400 py-8">No hay despachos publicados aún</p>
               ) : (
                 allPosts.map((post) => (
-                  <PostAdminCard key={post.id} post={post} onModerate={moderatePost} />
+                  <PostAdminCard key={post.id} post={post} onModerate={moderatePost} onDelete={deletePost} />
                 ))
               )}
             </div>
@@ -352,28 +516,36 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
 
             {editingJournalist && (
               <div className="border border-parliament-200 rounded-xl p-4 space-y-3 bg-parliament-50">
-                <h3 className="font-semibold text-sm">Editar: {editingJournalist.displayName}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input
-                    value={journalistForm.displayName}
-                    onChange={(e) => setJournalistForm({ ...journalistForm, displayName: e.target.value })}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    placeholder="Nombre"
-                  />
-                  <input
-                    value={journalistForm.email}
-                    onChange={(e) => setJournalistForm({ ...journalistForm, email: e.target.value })}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    placeholder="Correo"
-                  />
-                  <select
-                    value={journalistForm.status}
-                    onChange={(e) => setJournalistForm({ ...journalistForm, status: e.target.value as "libre" | "bloqueado" })}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                  >
-                    <option value="libre">Libre</option>
-                    <option value="bloqueado">Bloqueado</option>
-                  </select>
+                <h3 className="font-semibold text-sm">Editar periodista: {editingJournalist.displayName}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nombre para mostrar</label>
+                    <input
+                      value={journalistForm.displayName}
+                      onChange={(e) => setJournalistForm({ ...journalistForm, displayName: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                    <input
+                      type="email"
+                      value={journalistForm.email}
+                      onChange={(e) => setJournalistForm({ ...journalistForm, email: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Estado de la cuenta</label>
+                    <select
+                      value={journalistForm.status}
+                      onChange={(e) => setJournalistForm({ ...journalistForm, status: e.target.value as "libre" | "bloqueado" })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                    >
+                      <option value="libre">Libre — puede publicar</option>
+                      <option value="bloqueado">Bloqueado — no puede publicar</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <button onClick={saveJournalist} className="px-4 py-2 bg-parliament-700 text-white rounded-lg text-sm">Guardar</button>
@@ -440,26 +612,34 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
 
             {(showSenatorForm || editingSenator) && (
               <div className="border border-parliament-200 rounded-xl p-4 space-y-3 bg-parliament-50">
-                <h3 className="font-semibold text-sm">{editingSenator ? "Editar senador" : "Nuevo senador"}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input
-                    value={senatorForm.fullName}
-                    onChange={(e) => setSenatorForm({ ...senatorForm, fullName: e.target.value })}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    placeholder="Nombre completo"
-                  />
-                  <input
-                    value={senatorForm.party}
-                    onChange={(e) => setSenatorForm({ ...senatorForm, party: e.target.value })}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    placeholder="Partido"
-                  />
-                  <input
-                    value={senatorForm.caucus}
-                    onChange={(e) => setSenatorForm({ ...senatorForm, caucus: e.target.value })}
-                    className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                    placeholder="Bancada (opcional)"
-                  />
+                <h3 className="font-semibold text-sm">
+                  {editingSenator ? `Editar senador: ${editingSenator.fullName}` : "Agregar nuevo senador"}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                    <input
+                      value={senatorForm.fullName}
+                      onChange={(e) => setSenatorForm({ ...senatorForm, fullName: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Partido político</label>
+                    <input
+                      value={senatorForm.party}
+                      onChange={(e) => setSenatorForm({ ...senatorForm, party: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Bancada (opcional)</label>
+                    <input
+                      value={senatorForm.caucus}
+                      onChange={(e) => setSenatorForm({ ...senatorForm, caucus: e.target.value })}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                    />
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <button onClick={saveSenator} className="px-4 py-2 bg-parliament-700 text-white rounded-lg text-sm">Guardar</button>
@@ -513,10 +693,12 @@ export function AdminPanel({ user, initialState }: AdminPanelProps) {
 function PostAdminCard({
   post,
   onModerate,
+  onDelete,
   highlight = false,
 }: {
   post: PostWithAuthor;
   onModerate: (id: string, action: "approve" | "reject" | "block", note?: string) => void;
+  onDelete: (id: string) => void;
   highlight?: boolean;
 }) {
   const statusColors: Record<string, string> = {
@@ -543,7 +725,17 @@ function PostAdminCard({
           {new Date(post.createdAt).toLocaleString("es-CO")}
         </span>
       </div>
-      <p className="text-sm text-gray-800">{post.content}</p>
+      <p className="text-sm text-gray-800 whitespace-pre-wrap">{post.content}</p>
+      {post.imageUrl && (
+        <Image
+          src={post.imageUrl}
+          alt="Imagen adjunta"
+          width={400}
+          height={250}
+          className="rounded-lg max-h-48 w-auto object-cover"
+          unoptimized
+        />
+      )}
       {post.moderationNote && (
         <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
           Filtro: {post.moderationNote}
@@ -571,14 +763,22 @@ function PostAdminCard({
           </button>
         </div>
       )}
-      {post.status === "approved" && (
+      <div className="flex flex-wrap items-center gap-3 pt-1">
+        {post.status === "approved" && (
+          <button
+            onClick={() => onModerate(post.id, "block", "Bloqueado por el Secretario General")}
+            className="text-xs text-red-600 hover:underline"
+          >
+            Bloquear despacho
+          </button>
+        )}
         <button
-          onClick={() => onModerate(post.id, "block", "Bloqueado por el Secretario General")}
-          className="text-xs text-red-600 hover:underline"
+          onClick={() => onDelete(post.id)}
+          className="flex items-center gap-1 text-xs text-red-700 hover:underline ml-auto"
         >
-          Bloquear despacho
+          <Trash2 className="w-3 h-3" /> Eliminar despacho
         </button>
-      )}
+      </div>
     </div>
   );
 }
