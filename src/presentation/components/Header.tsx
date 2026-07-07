@@ -25,9 +25,8 @@ export function Header({ user }: HeaderProps) {
           <Image
             src="/images/logo-senado.png"
             alt="Logo del Senado"
-            width={44}
-            height={44}
-            className="rounded-full object-contain bg-white/10 p-1"
+            width={50}
+            height={50}
             priority
           />
           <div>
