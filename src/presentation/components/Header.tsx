@@ -20,16 +20,17 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className="gradient-header text-white">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           <Image
             src="/images/logo-senado.png"
             alt="Logo del Senado"
-            width={50}
-            height={50}
+            width={72}
+            height={72}
+            className="h-14 w-14 md:h-16 md:w-16 object-contain shrink-0"
             priority
           />
-          <div>
+          <div className="min-w-0">
             <h1 className="font-display text-xl font-bold tracking-tight">Senado Press</h1>
             <p className="text-senate-200 text-xs">Sala de Prensa — BIMUN 2026</p>
           </div>
@@ -52,7 +53,7 @@ export function Header({ user }: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-medium">{user.displayName}</p>
             <p className="text-xs text-senate-300">

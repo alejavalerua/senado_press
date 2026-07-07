@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import { Newspaper, Loader2 } from "lucide-react";
+import { PasswordField } from "./PasswordField";
 
 export function LoginForm() {
   const router = useRouter();
@@ -44,15 +44,8 @@ export function LoginForm() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white card-shadow mb-4 p-2">
-            <Image
-              src="/images/logo-senado.png"
-              alt="Logo del Senado"
-              width={72}
-              height={72}
-              className="object-contain"
-              priority
-            />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-header mb-4">
+            <Newspaper className="w-8 h-8 text-senate-200" />
           </div>
           <h1 className="font-display text-3xl font-bold text-senate-900">Senado Press</h1>
           <p className="text-gray-500 mt-2">Sala de Prensa del Modelo de Senado</p>
@@ -77,18 +70,14 @@ export function LoginForm() {
                 autoComplete="username"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Contraseña</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-senate-400 focus:ring-2 focus:ring-senate-200 outline-none"
-                placeholder="••••••••"
-                required
-                autoComplete="current-password"
-              />
-            </div>
+
+            <PasswordField
+              label="Contraseña"
+              value={password}
+              onChange={setPassword}
+              autoComplete="current-password"
+              required
+            />
 
             {error && (
               <div className="p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-200">
