@@ -32,6 +32,7 @@ const KNOWN_PASSWORDS: Record<string, string> = {
   alejandra: "admin2026",
   sophia: "presidente2026",
   valeria: "vicepresidente2026",
+  mariana: "subsecretaria2026",
 };
 
 async function listAdmins() {
