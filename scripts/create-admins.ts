@@ -51,7 +51,14 @@ const ADMINS = [
     email: "valeria.gomez@senado.bimun",
     password: "vicepresidente2026",
     media_outlet: "Vicepresidencia del Senado",
-  }
+  },
+  {
+    username: "mariana",
+    display_name: "Mariana Méndez",
+    email: "mariana.mendez@senado.bimun",
+    password: "subsecretaria2026",
+    media_outlet: "Subsecretaría del Senado",
+  },
 ];
 
 async function createAdmins() {
