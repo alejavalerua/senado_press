@@ -35,6 +35,14 @@ const USERS = [
     media_outlet: "Secretaría General del Senado",
   },
   {
+  username: "mariana",
+  display_name: "Mariana Méndez",
+  email: "mariana.mendez@senado.bimun",
+  password: "subsecretaria2026",
+  media_outlet: "Subsecretaría del Senado",
+  role: "admin"
+}
+  {
     username: "alejandra",
     display_name: "Alejandra Valencia",
     email: "alejandra.valencia@senado.bimun",
